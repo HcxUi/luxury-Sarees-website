@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIBHA Collection | Draped in Legacy</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap"
+        rel="stylesheet">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#0a0a0a',
+                            gold: '#D4AF37',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            overflow-x: hidden;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Grain Texture */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            z-index: 9998;
+            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+            filter: contrast(170%) brightness(100%);
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #0a0a0a;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .loader-line {
+            width: 200px;
+            height: 1px;
+            background: rgba(212, 175, 55, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .loader-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background: #D4AF37;
+            transition: width 0.3s ease-out;
+        }
+
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .gold-glow {
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        }
+
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.6;
+        }
+
+        .mouse-icon {
+            width: 20px;
+            height: 35px;
+            border: 2px solid #D4AF37;
+            border-radius: 12px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .mouse-wheel {
+            width: 2px;
+            height: 6px;
+            background: #D4AF37;
+            position: absolute;
+            left: 50%;
+            top: 6px;
+            transform: translateX(-50%);
+            animation: scroll-anim 2s infinite;
+        }
+
+        @keyframes scroll-anim {
+            0% {
+                top: 6px;
+                opacity: 1;
+            }
+
+            100% {
+                top: 20px;
+                opacity: 0;
+            }
+        }
+
+        .section-overlay {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+    </style>
+</head>
+
+<body class="bg-brand-black">
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <h2 class="font-serif text-3xl tracking-[0.3em] text-brand-gold gold-glow">VIBHA</h2>
+        <div class="loader-line">
+            <div id="loader-progress" class="loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- Scroll Container -->
+    <div id="main" class="relative">
+
+        <!-- Pinned Section -->
+        <div id="canvas-container" class="fixed top-0 left-0 w-full h-screen z-0">
+            <canvas id="saree-canvas"></canvas>
+            <div class="absolute inset-0 bg-black/20 pointer-events-none"></div>
+        </div>
+
+        <!-- Scroll Triggers -->
+        <div class="h-[500vh]">
+
+            <!-- Section 1: Hero (0%) -->
+            <section id="section-1" class="h-screen flex items-center justify-center relative z-10">
+                <div class="glass-panel p-12 md:p-20 text-center max-w-3xl">
+                    <h1 class="font-serif text-7xl md:text-9xl mb-6 tracking-tighter gold-glow leading-none">VIBHA.</h1>
+                    <p class="font-serif italic text-2xl md:text-4xl text-brand-gold opacity-90">Draped in Legacy.</p>
+                </div>
+                <div class="scroll-indicator font-sans text-[10px] uppercase tracking-[0.3em] text-brand-gold">
+                    <div class="mouse-icon">
+                        <div class="mouse-wheel"></div>
+                    </div>
+                    Scroll to Explore
+                </div>
+            </section>
+
+            <!-- Spacer for transition to Section 2 -->
+            <div class="h-screen"></div>
+
+            <!-- Section 2: Bottom Left (33%) -->
+            <section id="section-2" class="h-screen flex items-end justify-start p-8 md:p-24 relative z-10">
+                <div class="glass-panel p-8 md:p-14 max-w-xl">
+                    <h2 class="font-serif text-4xl md:text-6xl mb-6 leading-tight">Handwoven Precision.</h2>
+                    <div class="w-12 h-[1px] bg-brand-gold mb-6 opacity-50"></div>
+                    <p class="text-lg md:text-2xl text-gray-300 leading-relaxed font-light">The Art of Indian
+                        Craftsmanship. Every thread tells a story of heritage passed down through generations.</p>
+                </div>
+            </section>
+
+            <!-- Spacer for transition to Section 3 -->
+            <div class="h-screen"></div>
+
+            <!-- Section 3: Bottom Right (66%) -->
+            <section id="section-3" class="h-screen flex items-end justify-end p-8 md:p-24 relative z-10">
+                <div class="glass-panel p-8 md:p-14 max-w-xl text-right">
+                    <h2 class="font-serif text-4xl md:text-6xl mb-6 leading-tight">Timeless Elegance.</h2>
+                    <div class="w-12 h-[1px] bg-brand-gold mb-6 opacity-50 ml-auto"></div>
+                    <p class="text-lg md:text-2xl text-gray-300 leading-relaxed font-serif italic mb-6">Pure Silk.
+                        Authentic Zari.</p>
+                    <p class="text-xs text-brand-gold uppercase tracking-[0.4em]">Luxury textile positioning</p>
+                </div>
+            </section>
+
+            <!-- Spacer for transition to CTA -->
+            <div class="h-screen"></div>
+
+            <!-- Section 4: Center CTA (90%) -->
+            <section id="section-4" class="h-screen flex items-center justify-center relative z-10">
+                <div class="glass-panel p-12 md:p-20 text-center max-w-2xl">
+                    <h2 class="font-serif text-5xl md:text-7xl mb-12 gold-glow">Drape the Moment.</h2>
+                    <button
+                        class="group relative px-12 py-5 border border-brand-gold/50 text-brand-gold font-sans uppercase tracking-[0.3em] overflow-hidden transition-all duration-500">
+                        <span class="relative z-10 group-hover:text-brand-black transition-colors duration-500">Explore
+                            Collection</span>
+                        <div
+                            class="absolute inset-0 bg-brand-gold scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out">
+                        </div>
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Scripting -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const canvas = document.getElementById("saree-canvas");
+        const context = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Image Sequence Setup
+        const framePaths = [];
+
+        // Add images from Part 1 (25 frames)
+        for (let i = 1; i <= 25; i++) {
+            const frame = i.toString().padStart(3, '0');
+            framePaths.push(`./images/part1/ezgif-frame-${frame}.jpg`);
+        }
+        // Add images from Part 2 (41 frames)
+        for (let i = 1; i <= 41; i++) {
+            const frame = i.toString().padStart(3, '0');
+            framePaths.push(`./images/part2/ezgif-frame-${frame}.jpg`);
+        }
+        // Add images from Part 3 (41 frames)
+        for (let i = 1; i <= 41; i++) {
+            const frame = i.toString().padStart(3, '0');
+            framePaths.push(`./images/part3/ezgif-frame-${frame}.jpg`);
+        }
+
+        const frameCount = framePaths.length;
+        const images = [];
+        const saree = {
+            frame: 0
+        };
+
+        // Preload images
+        let loadedImages = 0;
+        const loaderProgress = document.getElementById("loader-progress");
+        const loader = document.getElementById("loader");
+
+        // Safety timeout: Hide loader after 5 seconds regardless of progress
+        const safetyTimeout = setTimeout(() => {
+            if (loader.style.display !== 'none') {
+                console.warn("Loading taking too long, forcing start...");
+                hideLoader();
+            }
+        }, 5000);
+
+        function hideLoader() {
+            clearTimeout(safetyTimeout);
+            loader.style.opacity = "0";
+            setTimeout(() => {
+                loader.style.display = "none";
+                // Initial animation for hero section
+                gsap.from("#section-1 .glass-panel", {
+                    opacity: 0,
+                    y: 100,
+                    duration: 1.5,
+                    ease: "power4.out"
+                });
+            }, 1000);
+        }
+
+        if (frameCount === 0) {
+            console.error("No images found in the specified paths.");
+            hideLoader();
+            render(); // Render fallback
+        } else {
+            framePaths.forEach((path, index) => {
+                const img = new Image();
+                img.onload = () => {
+                    loadedImages++;
+                    const progress = (loadedImages / frameCount) * 100;
+                    if (loaderProgress) loaderProgress.style.width = progress + "%";
+
+                    if (index === 0) render(); // Render first frame as soon as it's ready
+
+                    if (loadedImages === frameCount) {
+                        hideLoader();
+                    }
+                };
+                img.onerror = () => {
+                    console.error(`Failed to load image: ${path}`);
+                    loadedImages++;
+                    if (loadedImages === frameCount) {
+                        hideLoader();
+                    }
+                };
+                img.src = path;
+                images.push(img);
+            });
+        }
+
+        // GSAP ScrollTrigger for the Canvas
+        if (frameCount > 0) {
+            gsap.to(saree, {
+                frame: frameCount - 1,
+                snap: "frame",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#main",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1,
+                },
+                onUpdate: render
+            });
+        }
+        // Initialize first frame
+        // This line needs to be conditional or handled carefully if frameCount is 0
+        // If images[0] might not exist, we should not try to set its onload.
+        // The render() call in hideLoader() or for frameCount === 0 handles initial display.
+        if (frameCount > 0 && images[0]) {
+            images[0].onload = render;
+        }
+
+
+        function render() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            const img = images[saree.frame];
+
+            if (img && img.complete) {
+                // Object-cover behavior
+                const canvasRatio = canvas.width / canvas.height;
+                const imgRatio = img.width / img.height;
+                let drawWidth, drawHeight, offsetX, offsetY;
+
+                if (canvasRatio > imgRatio) {
+                    drawWidth = canvas.width;
+                    drawHeight = canvas.width / imgRatio;
+                    offsetX = 0;
+                    offsetY = (canvas.height - drawHeight) / 2;
+                } else {
+                    drawWidth = canvas.height * imgRatio;
+                    drawHeight = canvas.height;
+                    offsetX = (canvas.width - drawWidth) / 2;
+                    offsetY = 0;
+                }
+
+                context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+            }
+        }
+
+        // Resize handler
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            render();
+        });
+
+        // Section Overlays Animation
+        const sections = [
+            { id: "#section-1", start: 0, end: 0.2 },
+            { id: "#section-2", start: 0.25, end: 0.5 },
+            { id: "#section-3", start: 0.55, end: 0.8 },
+            { id: "#section-4", start: 0.85, end: 1.0 }
+        ];
+
+        sections.forEach((section, idx) => {
+            // Hide all except first initially (if not loaded yet)
+            if (idx > 0) gsap.set(section.id + " .glass-panel", { opacity: 0, y: 50 });
+
+            gsap.fromTo(section.id + " .glass-panel",
+                { opacity: 0, y: 50 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    scrollTrigger: {
+                        trigger: "#main",
+                        start: `${section.start * 100}% top+=10%`,
+                        end: `${(section.start + 0.1) * 100}% top`,
+                        scrub: 1,
+                    }
+                }
+            );
+
+            // Special handling for the last section so it doesn't fade out at the very end
+            if (idx < sections.length - 1) {
+                gsap.to(section.id + " .glass-panel", {
+                    opacity: 0,
+                    y: -50,
+                    scrollTrigger: {
+                        trigger: "#main",
+                        start: `${section.end * 100}% top`,
+                        end: `${(section.end + 0.1) * 100}% top`,
+                        scrub: 1
+                    }
+                });
+            }
+        });
+
+    </script>
+</body>
+
+</html>
